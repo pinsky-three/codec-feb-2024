@@ -103,30 +103,32 @@ void loop() {
   //   generate_center_line(center_line_force);
   // }
 
-  int dice = random(0, 100);
+  for (int i = 0; i < 100; i++) {
+    int dice = random(0, 100);
 
-  if (dice < 1) {
-    x_n = 0;
-    y_n = 0.16 * y;
-  } else if (dice < 86) {
-    x_n = 0.85 * x + 0.04 * y;
-    y_n = -0.04 * x + 0.85 * y + 1.6;
-  } else if (dice < 93) {
-    x_n = 0.2 * x - 0.26 * y;
-    y_n = 0.23 * x + 0.22 * y + 1.6;
-  } else {
-    x_n = -0.15 * x + 0.28 * y;
-    y_n = 0.26 * x + 0.24 * y + 0.44;
+    if (dice < 1) {
+      x_n = 0;
+      y_n = 0.16 * y;
+    } else if (dice < 86) {
+      x_n = 0.85 * x + 0.04 * y;
+      y_n = -0.04 * x + 0.85 * y + 1.6;
+    } else if (dice < 93) {
+      x_n = 0.2 * x - 0.26 * y;
+      y_n = 0.23 * x + 0.22 * y + 1.6;
+    } else {
+      x_n = -0.15 * x + 0.28 * y;
+      y_n = 0.26 * x + 0.24 * y + 0.44;
+    }
+
+    y = y_n;
+    x = x_n;
+
+    int y_int = y_n * 22;
+    int x_int = x_n * 20 + 110;
+
+    int index_0 = y_int * 256 + x_int;
+    screen[index_0] = 0xBD;
   }
-
-  y = y_n;
-  x = x_n;
-
-  int y_int = y_n * 22;
-  int x_int = x_n * 20 + 110;
-
-  int index_0 = y_int * 256 + x_int;
-  screen[index_0] = 0xBD;
 
   for (int y = 0; y < 240; y++) {
     for (int x = 0; x < 256; x++) {
