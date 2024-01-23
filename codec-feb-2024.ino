@@ -54,10 +54,16 @@ uint8_t screen[256 * 240];
 //   }
 // }
 
-// uint8_t** frame_buffer;
+float_t y;
+float_t x;
+
+float_t y_n;
+float_t x_n;
 
 void setup() {
   // analogReadResolution(9);
+
+  // Serial.begin(115200);
 
   video_out.begin();
 
@@ -66,9 +72,15 @@ void setup() {
   for (int y = 0; y < 240; y++) {
     for (int x = 0; x < 256; x++) {
       int index = y * 256 + x;
-      screen[index] = 255;
+      screen[index] = 0x00;
     }
   }
+
+  y = 0.0;  // random(0, 240);
+  x = 0.0;  // random(0, 255);
+
+  y_n = y;
+  x_n = x;
 }
 
 void loop() {
@@ -91,11 +103,30 @@ void loop() {
   //   generate_center_line(center_line_force);
   // }
 
-  int y_0 = random(0, 240);
-  int x_0 = random(0, 255);
+  int dice = random(0, 100);
 
-  int index_0 = y_0 * 256 + x_0;
-  screen[index_0] = 0;
+  if (dice < 1) {
+    x_n = 0;
+    y_n = 0.16 * y;
+  } else if (dice < 86) {
+    x_n = 0.85 * x + 0.04 * y;
+    y_n = -0.04 * x + 0.85 * y + 1.6;
+  } else if (dice < 93) {
+    x_n = 0.2 * x - 0.26 * y;
+    y_n = 0.23 * x + 0.22 * y + 1.6;
+  } else {
+    x_n = -0.15 * x + 0.28 * y;
+    y_n = 0.26 * x + 0.24 * y + 0.44;
+  }
+
+  y = y_n;
+  x = x_n;
+
+  int y_int = y_n * 22;
+  int x_int = x_n * 20 + 110;
+
+  int index_0 = y_int * 256 + x_int;
+  screen[index_0] = 0xBD;
 
   for (int y = 0; y < 240; y++) {
     for (int x = 0; x < 256; x++) {
@@ -104,9 +135,11 @@ void loop() {
     }
   }
 
+  // Serial.printf("x: %f, y: %f\n", x, y);
+
   video_out.waitForFrame();
 
-  // delay(100);
+  // delay(10);
 }
 
 // void evolve() {
