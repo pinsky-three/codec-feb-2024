@@ -1,5 +1,7 @@
 #include <ESP_8_BIT_composite.h>
 
+#include "esp_random.h"
+
 ESP_8_BIT_composite video_out(true);
 
 uint8_t screen[256 * 240];
@@ -46,9 +48,12 @@ void loop() {
     }
   }
 
-  // Serial.printf("x: %f, y: %f\n", x, y);
+  draw_fern(101, 0x09, 100, 1.0);
+  draw_fern(115, 0x05, 100, 1.0);
+  draw_fern(110, 0x9C, 5000, 1.0);
 
-  draw_fern();
+  // draw_fern(100, 0x9C, 8000, 0.5);
+  // draw_fern(120, 0x9C, 8000, 0.5);
 
   for (int y = 0; y < 240; y++) {
     for (int x = 0; x < 256; x++) {
@@ -57,27 +62,33 @@ void loop() {
     }
   }
 
-  if (alpha_up) {
-    alpha += 0.008;
-  } else {
-    alpha -= 0.003;
-  }
+  // if (alpha_up) {
+  //   alpha += 0.01;
+  // } else {
+  //   alpha -= 0.01;
+  // }
 
-  if (alpha > 0.8) {
-    alpha_up = false;
-  } else if (alpha < 0.01) {
-    alpha_up = true;
-  }
+  // if (alpha > 0.02) {
+  //   alpha_up = false;
+  // } else if (alpha < 0.02) {
+  //   alpha_up = true;
+  // }
 
   video_out.waitForFrame();
+
+  // delay(160);
 }
 
-void draw_fern() {
-  uint8_t color = 0x0D;
+void draw_fern(uint8_t offset, uint8_t color, int iterations, float_t scale) {
+  // uint8_t color = 0x0D;
 
-  for (int i = 0; i < 5000; i++) {
-    int dice = random(0, 100);
-    // int dice = map(analogRead(34), 0, 1023, 0, 100);
+  uint8_t random_bytes[iterations];
+  esp_fill_random(random_bytes, iterations);
+
+  for (int i = 0; i < iterations; i++) {
+    int dice_hundred = (random_bytes[i] * 100);
+
+    uint8_t dice = dice_hundred / 255;
 
     float_t a, b, c, d, e, f, p1, p2, p3, p4;
 
@@ -95,8 +106,8 @@ void draw_fern() {
       f = 0;
 
     } else if (dice < (p1 + p2) * 100) {
-      a = alpha;
-      b = 0.04;
+      a = 0.85;
+      b = alpha;  // 0.04;
       c = -0.04;
       d = 0.85;
       e = 0;
@@ -129,11 +140,11 @@ void draw_fern() {
     y = y_n;
     x = x_n;
 
-    int y_int = y_n * 22;
-    int x_int = x_n * 20 + 110;
+    int y_int = y_n * 22 * scale;
+    int x_int = x_n * 20 * scale + offset;
 
     int index_0 = y_int * 256 + x_int;
-    screen[index_0] = color;
+    screen[index_0] += color;
 
     // color += 0x01;
   }
