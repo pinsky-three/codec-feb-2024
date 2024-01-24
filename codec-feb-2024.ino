@@ -61,7 +61,7 @@ float_t y_n;
 float_t x_n;
 
 void setup() {
-  // analogReadResolution(9);
+  analogReadResolution(10);
 
   // Serial.begin(115200);
 
@@ -105,20 +105,65 @@ void loop() {
 
   for (int i = 0; i < 100; i++) {
     int dice = random(0, 100);
+    // int dice = map(analogRead(34), 0, 1023, 0, 100);
 
-    if (dice < 1) {
-      x_n = 0;
-      y_n = 0.16 * y;
-    } else if (dice < 86) {
-      x_n = 0.85 * x + 0.04 * y;
-      y_n = -0.04 * x + 0.85 * y + 1.6;
-    } else if (dice < 93) {
-      x_n = 0.2 * x - 0.26 * y;
-      y_n = 0.23 * x + 0.22 * y + 1.6;
+    uint8_t color = 0xFF;
+
+    float_t a, b, c, d, e, f, p1, p2, p3, p4;
+
+    p1 = 0.01;
+    p2 = 0.85;
+    p3 = 0.07;
+    p4 = 0.07;
+
+    if (dice < p1 * 100) {
+      a = 0;
+      b = 0;
+      c = 0;
+      d = 0.16;
+      e = 0;
+      f = 0;
+
+      // x_n = 0;
+      // y_n = 0.16 * y;
+    } else if (dice < (p1 + p2) * 100) {
+      a = 0.85;
+      b = 0.04;
+      c = -0.04;
+      d = 0.85;
+      e = 0;
+      f = 1.6;
+
+      // x_n = 0.75 * x + 0.14 * y;
+      // x_n = 0.85 * x + 0.04 * y;
+      // y_n = -0.04 * x + 0.85 * y + 1.6;
+      color = 0xF4;
+    } else if (dice < (p1 + p2 + p3) * 100) {
+      a = 0.2;
+      b = -0.26;
+      c = 0.23;
+      d = 0.22;
+      e = 0;
+      f = 1.6;
+
+      // x_n = 0.2 * x - 0.26 * y;
+      // y_n = 0.23 * x + 0.22 * y + 1.6;
+      color = 0xE8;
     } else {
-      x_n = -0.15 * x + 0.28 * y;
-      y_n = 0.26 * x + 0.24 * y + 0.44;
+      a = -0.15;
+      b = 0.28;
+      c = 0.26;
+      d = 0.24;
+      e = 0;
+      f = 0.44;
+
+      // x_n = -0.15 * x + 0.28 * y;
+      // y_n = 0.26 * x + 0.24 * y + 0.44;
+      color = 0x0F;
     }
+
+    x_n = a * x + b * y + e;
+    y_n = c * x + d * y + f;
 
     y = y_n;
     x = x_n;
@@ -127,7 +172,7 @@ void loop() {
     int x_int = x_n * 20 + 110;
 
     int index_0 = y_int * 256 + x_int;
-    screen[index_0] = 0xBD;
+    screen[index_0] = color;
   }
 
   for (int y = 0; y < 240; y++) {
