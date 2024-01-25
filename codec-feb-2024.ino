@@ -16,7 +16,7 @@ float_t alpha = 0.01;
 bool alpha_up = true;
 
 void setup() {
-  analogReadResolution(10);
+  // analogReadResolution(10);
 
   // Serial.begin(115200);
 
@@ -41,16 +41,16 @@ void setup() {
 void loop() {
   uint8_t** frame_buffer = video_out.getFrameBufferLines();
 
-  for (int y = 0; y < 240; y++) {
-    for (int x = 0; x < 256; x++) {
-      int index = y * 256 + x;
-      screen[index] = 0x00;
-    }
-  }
+  // for (int y = 0; y < 240; y++) {
+  //   for (int x = 0; x < 256; x++) {
+  //     int index = y * 256 + x;
+  //     screen[index] = 0x00;
+  //   }
+  // }
 
-  draw_fern(101, 0x09, 100, 1.0);
-  draw_fern(115, 0x05, 100, 1.0);
-  draw_fern(110, 0x9C, 5000, 1.0);
+  // draw_fern(115, 0x05, 1000, 1.0);
+  draw_fern(108, 0x11, 5000, 0.95);
+  draw_fern(110, 0x9C, 10000, 1.0);
 
   // draw_fern(100, 0x9C, 8000, 0.5);
   // draw_fern(120, 0x9C, 8000, 0.5);
@@ -82,13 +82,14 @@ void loop() {
 void draw_fern(uint8_t offset, uint8_t color, int iterations, float_t scale) {
   // uint8_t color = 0x0D;
 
-  uint8_t random_bytes[iterations];
-  esp_fill_random(random_bytes, iterations);
+  // uint8_t random_bytes[iterations];
+  // esp_fill_random(random_bytes, iterations);
 
   for (int i = 0; i < iterations; i++) {
-    int dice_hundred = (random_bytes[i] * 100);
+    // int dice_hundred = (random_bytes[i] * 100);
 
-    uint8_t dice = dice_hundred / 255;
+    // uint8_t dice = dice_hundred / 255;
+    uint8_t dice = random(0, 100);
 
     float_t a, b, c, d, e, f, p1, p2, p3, p4;
 
@@ -144,7 +145,7 @@ void draw_fern(uint8_t offset, uint8_t color, int iterations, float_t scale) {
     int x_int = x_n * 20 * scale + offset;
 
     int index_0 = y_int * 256 + x_int;
-    screen[index_0] += color;
+    screen[index_0] = color;
 
     // color += 0x01;
   }

@@ -10,7 +10,8 @@
     "string_view": "cpp",
     "unordered_map": "cpp",
     "vector": "cpp",
-    "__locale": "cpp"
+    "__locale": "cpp",
+    "variant": "cpp"
   },
   "dimmer.enabled": false
 }
