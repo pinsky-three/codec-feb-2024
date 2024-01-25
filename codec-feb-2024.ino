@@ -16,20 +16,11 @@ float_t alpha = 0.01;
 bool alpha_up = true;
 
 void setup() {
-  // analogReadResolution(10);
-
-  // Serial.begin(115200);
-
   video_out.begin();
 
   uint8_t** frame_buffer = video_out.getFrameBufferLines();
 
-  for (int y = 0; y < 240; y++) {
-    for (int x = 0; x < 256; x++) {
-      int index = y * 256 + x;
-      screen[index] = 0x00;
-    }
-  }
+  clear_screen();
 
   y = 0.0;  // random(0, 240);
   x = 0.0;  // random(0, 255);
@@ -41,41 +32,32 @@ void setup() {
 void loop() {
   uint8_t** frame_buffer = video_out.getFrameBufferLines();
 
-  // for (int y = 0; y < 240; y++) {
-  //   for (int x = 0; x < 256; x++) {
-  //     int index = y * 256 + x;
-  //     screen[index] = 0x00;
-  //   }
-  // }
+  clear_screen();
 
   // draw_fern(115, 0x05, 1000, 1.0);
-  draw_fern(108, 0x11, 5000, 0.95);
-  draw_fern(110, 0x9C, 10000, 1.0);
+  draw_fern(108, 0x11, 5000, 1.0);
+  draw_fern(110, 0x9C, 20000, 2.0);
 
   // draw_fern(100, 0x9C, 8000, 0.5);
   // draw_fern(120, 0x9C, 8000, 0.5);
 
-  for (int y = 0; y < 240; y++) {
-    for (int x = 0; x < 256; x++) {
-      int index = y * 256 + x;
-      frame_buffer[239 - y][x] = screen[index % (256 * 240)];
-    }
-  }
-
-  // if (alpha_up) {
-  //   alpha += 0.01;
-  // } else {
-  //   alpha -= 0.01;
-  // }
-
-  // if (alpha > 0.02) {
-  //   alpha_up = false;
-  // } else if (alpha < 0.02) {
-  //   alpha_up = true;
-  // }
+  paint_screen(frame_buffer);
 
   video_out.waitForFrame();
 
+  int mul = 100;  // random(0, 100);
+
+  if (alpha_up) {
+    alpha += 0.000005 * mul;
+  } else {
+    alpha -= 0.000005 * mul;
+  }
+
+  if (alpha > 0.01) {
+    alpha_up = false;
+  } else if (alpha < -0.01) {
+    alpha_up = true;
+  }
   // delay(160);
 }
 
@@ -144,9 +126,27 @@ void draw_fern(uint8_t offset, uint8_t color, int iterations, float_t scale) {
     int y_int = y_n * 22 * scale;
     int x_int = x_n * 20 * scale + offset;
 
-    int index_0 = y_int * 256 + x_int;
+    int index_0 = (y_int * 256 + x_int) % (256 * 240);
     screen[index_0] = color;
 
     // color += 0x01;
+  }
+}
+
+void clear_screen() {
+  for (int y = 0; y < 240; y++) {
+    for (int x = 0; x < 256; x++) {
+      int index = y * 256 + x;
+      screen[index] = 0x00;
+    }
+  }
+}
+
+void paint_screen(uint8_t** frame_buffer) {
+  for (int y = 0; y < 240; y++) {
+    for (int x = 0; x < 256; x++) {
+      int index = y * 256 + x;
+      frame_buffer[239 - y][x] = screen[index % (256 * 240)];
+    }
   }
 }
