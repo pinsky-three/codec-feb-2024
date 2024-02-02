@@ -35,17 +35,17 @@ void loop() {
   clear_screen();
 
   // draw_fern(115, 0x05, 1000, 1.0);
-  draw_fern(108, 0x11, 5000, 1.0);
-  draw_fern(110, 0x9C, 20000, 2.0);
+  draw_fern(108, 0x11, 5000, 1.0, alpha);
+  draw_fern(110, 0x9C, 20000, 2.0, alpha);
 
   // draw_fern(100, 0x9C, 8000, 0.5);
-  // draw_fern(120, 0x9C, 8000, 0.5);
+  draw_fern(200, 0xFD, 1000, 3.0, alpha * 0.5);
 
   paint_screen(frame_buffer);
 
   video_out.waitForFrame();
 
-  int mul = 100;  // random(0, 100);
+  int mul = 50;  // random(0, 100);
 
   if (alpha_up) {
     alpha += 0.000005 * mul;
@@ -61,12 +61,8 @@ void loop() {
   // delay(160);
 }
 
-void draw_fern(uint8_t offset, uint8_t color, int iterations, float_t scale) {
-  // uint8_t color = 0x0D;
-
-  // uint8_t random_bytes[iterations];
-  // esp_fill_random(random_bytes, iterations);
-
+void draw_fern(uint8_t offset, uint8_t color, int iterations, float_t scale,
+               float_t alpha) {
   for (int i = 0; i < iterations; i++) {
     // int dice_hundred = (random_bytes[i] * 100);
 
