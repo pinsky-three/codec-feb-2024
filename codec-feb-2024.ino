@@ -19,6 +19,9 @@ float_t x_n;
 float_t alpha = 0.01;
 bool alpha_up = true;
 
+float_t beta = 0.01;
+bool beta_up = true;
+
 void setup() {
   video_out.begin();
 
@@ -45,9 +48,9 @@ void loop() {
 
   clear_screen();
 
-  draw_fern(200, 0x05, 1000, 0.5, alpha);
-  draw_fern(108, 0x11, 5000, 1.0, alpha);
-  draw_fern(110, 0x9C, 20000, 2.0, alpha);
+  draw_fern(200, 0x05, 1000, 0.5, alpha, beta);
+  draw_fern(119, 0x11, 5000, 1.0, alpha, beta);
+  draw_fern(120, 0x9C, 20000, 2.0, alpha, beta);
 
   // draw_fern(100, 0x9C, 8000, 0.5);
   // draw_fern(200, 0xFD, 1000, 3.0, alpha * 0.5);
@@ -64,16 +67,28 @@ void loop() {
     alpha -= 0.000005 * mul;
   }
 
+  if (beta_up) {
+    beta += 0.00001 * mul;
+  } else {
+    beta -= 0.00001 * mul;
+  }
+
   if (alpha > 0.01) {
     alpha_up = false;
   } else if (alpha < -0.01) {
     alpha_up = true;
   }
+
+  if (beta > 0.9) {
+    beta_up = false;
+  } else if (beta < 0.1) {
+    beta_up = true;
+  }
   // delay(160);
 }
 
 void draw_fern(uint8_t offset, uint8_t color, int iterations, float_t scale,
-               float_t alpha) {
+               float_t alpha, float_t beta) {
   for (int i = 0; i < iterations; i++) {
     // int dice_hundred = (random_bytes[i] * 100);
 
@@ -96,7 +111,7 @@ void draw_fern(uint8_t offset, uint8_t color, int iterations, float_t scale,
       f = 0;
 
     } else if (dice < (p1 + p2) * 100) {
-      a = 0.85;
+      a = beta;
       b = alpha;  // 0.04;
       c = -0.04;
       d = 0.85;
