@@ -1,10 +1,14 @@
 #include <ESP_8_BIT_composite.h>
+// #include <engine.h>`
 
 #include "esp_random.h"
 
+#define WIDTH 256
+#define HEIGHT 240
+
 ESP_8_BIT_composite video_out(true);
 
-uint8_t screen[256 * 240];
+uint8_t screen[WIDTH * HEIGHT];
 
 float_t y;
 float_t x;
@@ -27,6 +31,13 @@ void setup() {
 
   y_n = y;
   x_n = x;
+
+  // pinsky_font pinsky;
+  // pinsky.video_out = video_out;
+
+  // MicroEngine engine;
+
+  // engine.begin();
 }
 
 void loop() {
@@ -34,14 +45,14 @@ void loop() {
 
   clear_screen();
 
-  // draw_fern(115, 0x05, 1000, 1.0);
+  draw_fern(200, 0x05, 1000, 0.5, alpha);
   draw_fern(108, 0x11, 5000, 1.0, alpha);
   draw_fern(110, 0x9C, 20000, 2.0, alpha);
 
   // draw_fern(100, 0x9C, 8000, 0.5);
-  draw_fern(200, 0xFD, 1000, 3.0, alpha * 0.5);
+  // draw_fern(200, 0xFD, 1000, 3.0, alpha * 0.5);
 
-  paint_screen(frame_buffer);
+  draw_screen(frame_buffer);
 
   video_out.waitForFrame();
 
@@ -138,7 +149,7 @@ void clear_screen() {
   }
 }
 
-void paint_screen(uint8_t** frame_buffer) {
+void draw_screen(uint8_t** frame_buffer) {
   for (int y = 0; y < 240; y++) {
     for (int x = 0; x < 256; x++) {
       int index = y * 256 + x;
