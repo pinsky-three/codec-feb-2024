@@ -48,7 +48,8 @@ void loop() {
 
   clear_screen();
 
-  draw_fern(200, 0x05, 1000, 0.5, alpha, beta);
+  draw_fern(30, 0x05, 1000, 0.5, alpha, beta);
+  draw_fern(200, 0x05, 1000, 0.7, alpha, beta);
   draw_fern(119, 0x11, 5000, 1.0, alpha, beta);
   draw_fern(120, 0x9C, 20000, 2.0, alpha, beta);
 
